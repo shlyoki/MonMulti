@@ -1,0 +1,12 @@
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\MonMulti.dll
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\MonMulti.pdb
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\0Harmony.dll
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\Assembly-CSharp.dll
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\BepInEx.dll
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\UnityEngine.CoreModule.dll
+F:\MONBAZOU\MonMulti\MonMulti\bin\Debug\UnityEngine.dll
+F:\MONBAZOU\MonMulti\MonMulti\obj\Debug\MonMulti.csproj.AssemblyReference.cache
+F:\MONBAZOU\MonMulti\MonMulti\obj\Debug\MonMulti.csproj.CoreCompileInputs.cache
+F:\MONBAZOU\MonMulti\MonMulti\obj\Debug\MonMulti.csproj.Up2Date
+F:\MONBAZOU\MonMulti\MonMulti\obj\Debug\MonMulti.dll
+F:\MONBAZOU\MonMulti\MonMulti\obj\Debug\MonMulti.pdb
