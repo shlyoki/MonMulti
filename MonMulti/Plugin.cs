@@ -9,7 +9,7 @@ namespace MonMulti
     {
         public const string pluginGuid = "monbazou.antalervin19.monmultiplayer";
         public const string pluginName = "MonMulti";
-        public const string pluginVersion = "0.0.0.3";
+        public const string pluginVersion = "0.0.0.4";
 
         private Harmony _harmony;
         private bool isInitialized = false;
