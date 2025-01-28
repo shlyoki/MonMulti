@@ -1,0 +1,88 @@
+using BepInEx;
+using HarmonyLib;
+using UnityEngine;
+using System;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+namespace MonMulti
+{
+    [BepInPlugin(pluginGuid, pluginName, pluginVersion)]
+    public class MonMultiMod : BaseUnityPlugin
+    {
+        public const string pluginGuid = "monbazou.antalervin19.monmultiplayer";
+        public const string pluginName = "MonMulti";
+        public const string pluginVersion = "0.0.0.8";
+
+        private Harmony _harmony;
+        private bool isInitialized = false;
+
+        private GameObject _cube;
+
+        // Client instance
+        private Client _client;
+
+        private void Awake()
+        {
+            // Initialize Harmony
+            _harmony = new Harmony(pluginGuid);
+            _harmony.PatchAll();
+            Debug.Log($"{pluginName} has been loaded!");
+
+            // Initialize client
+            _client = new Client();
+        }
+        private void Update()
+        {
+            if (GameData.IsGameInitialized && GameData.Player != null)
+            {
+                if (!isInitialized)
+                {
+                    OnGameInitialization();
+                    isInitialized = true;
+                }
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (!isInitialized) { return; }
+            if (Time.frameCount % 50 == 0)
+            {
+                SendMessageToServerAsync("Message sent every 50 frames");
+            }
+        }
+
+        private void OnGameInitialization()
+        {
+            Debug.Log("Game is ready! \n Connecting to server...");
+
+            Task.Run(() => ConnectToServer());
+        }
+
+        private async Task ConnectToServer()
+        {
+            try
+            {
+                await _client.ConnectToServerAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error connecting to the server: {ex.Message}");
+            }
+        }
+
+        private async Task SendMessageToServerAsync(string message)
+        {
+            string response = await _client.SendMessageAsync(message);
+            Debug.Log($"Message sent to server: {message}");
+            Debug.Log($"Server responded: {response}");
+        }
+
+        private void OnDestroy()
+        {
+            Debug.Log("Disconnecting from server...");
+            _client.Disconnect();
+        }
+    }
+}

@@ -1,28 +1,29 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using UnityEngine;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace MonMulti
 {
-    [BepInPlugin(pluginGuid, pluginName, pluginVersion)]
+    [BepInPlugin(ModInfo.pluginGuid, ModInfo.pluginName, ModInfo.pluginVersion)]
     public class MonMultiMod : BaseUnityPlugin
     {
-        public const string pluginGuid = "monbazou.antalervin19.monmultiplayer";
-        public const string pluginName = "MonMulti";
-        public const string pluginVersion = "0.0.0.5";
-
         private Harmony _harmony;
+        private bool isInitialized = false;
         private Server _server;
 
-        private bool isInitialized = false;
-
-        private GameObject PlayerCube;
         private void Awake()
         {
             // Initialize Harmony
-            _harmony = new Harmony(pluginGuid);
+            _harmony = new Harmony(ModInfo.pluginGuid);
             _harmony.PatchAll();
-            Debug.Log($"{pluginName} has been loaded!");
+            Debug.Log($"{ModInfo.pluginName} has been loaded!");
+
+            // Initialize server
+            _server = new Server();
         }
 
         private void Update()
@@ -31,39 +32,57 @@ namespace MonMulti
             {
                 if (!isInitialized)
                 {
-                    Debug.Log("Game is initialized and Player is available.");
-                    CreatePlayerCube();
+                    OnGameInitialization();
                     isInitialized = true;
-                }
-
-                Vector3 playerPosition = GameData.Player.transform.position;
-                Quaternion playerRotation = GameData.Player.transform.rotation;
-
-                Debug.Log($"Player Position: {playerPosition}, Player Rotation: {playerRotation}");
-
-                PlayerCube.transform.position = GameData.Player.transform.position + new Vector3(0, 2, 0);
-            }
-            else
-            {
-                if (!isInitialized)
-                {
-                    Debug.LogWarning("Game is not initialized or Player is not yet available.");
                 }
             }
         }
 
-        private void CreatePlayerCube()
+        private void FixedUpdate()
         {
-            PlayerCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            PlayerCube.transform.position = new Vector3(0, 10, 0);
-            PlayerCube.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            if (!isInitialized) { return; }
+            if (Time.frameCount % 50 == 0)
+            {
+                SendMessageToAllClients("Update Sync from Server!");
+            }
+        }
 
-            Renderer renderer = PlayerCube.GetComponent<Renderer>();
-            renderer.material.color = Color.white;
+        private void OnGameInitialization()
+        {
+            Debug.Log("Game is ready! \n Initializing server...");
 
-            DontDestroyOnLoad(PlayerCube);
+            Task.Run(() => StartServer());
 
-            Debug.Log("Player now has a cube floating above them.");
+        }
+
+        private async Task StartServer()
+        {
+            try
+            {
+                await _server.StartServerAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error starting the server: {ex.Message}");
+            }
+        }
+
+        private async Task SendMessageToAllClients(string message)
+        {
+            await _server.SendMessageToAllClientsAsync(message);
+            Debug.Log($"Message sent to all clients: {message}");
+        }
+
+        private async Task SendMessageToClient(TcpClient client, string message)
+        {
+            await _server.SendMessageToClientAsync(client, message);
+            Debug.Log($"Message sent to client: {message}");
+        }
+
+        private void OnDestroy()
+        {
+            Debug.Log("Stopping server...");
+            _server.StopServer();
         }
     }
 }
