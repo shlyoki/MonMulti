@@ -3,7 +3,6 @@ using HarmonyLib;
 using UnityEngine;
 using System;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace MonMulti
 {
@@ -17,9 +16,6 @@ namespace MonMulti
         private Harmony _harmony;
         private bool isInitialized = false;
 
-        private GameObject _cube;
-
-        // Client instance
         private Client _client;
 
         private void Awake()
@@ -32,6 +28,7 @@ namespace MonMulti
             // Initialize client
             _client = new Client();
         }
+
         private void Update()
         {
             if (GameData.IsGameInitialized && GameData.Player != null)
@@ -53,7 +50,7 @@ namespace MonMulti
                 Vector3 playerPosition = GameData.Player.transform.position;
 
                 string positionMessage = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
-                Debug.Log(positionMessage);
+
                 SendMessageToServerAsync(positionMessage);
             }
         }
@@ -61,7 +58,6 @@ namespace MonMulti
         private void OnGameInitialization()
         {
             Debug.Log("Game is ready! \n Connecting to server...");
-
             Task.Run(() => ConnectToServer());
         }
 
@@ -80,6 +76,11 @@ namespace MonMulti
         private async Task SendMessageToServerAsync(string message)
         {
             string response = await _client.SendMessageAsync(message);
+            if (!string.IsNullOrEmpty(response))
+            {
+                // Optionally handle server response (if needed)
+                Debug.Log($"Server responded: {response}");
+            }
         }
 
         private void OnDestroy()

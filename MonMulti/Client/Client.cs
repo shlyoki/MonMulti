@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BepInEx;
+using UnityEngine;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -8,7 +10,7 @@ namespace MonMulti
 {
     public class Client
     {
-        private const string ServerAddress = "127.0.0.1"; // Localhost
+        private const string ServerAddress = "127.0.0.1";
         private const int Port = 25565;
         private TcpClient _tcpClient;
         private NetworkStream _networkStream;
@@ -19,7 +21,7 @@ namespace MonMulti
             {
                 _tcpClient = new TcpClient();
                 await _tcpClient.ConnectAsync(ServerAddress, Port);
-                Console.WriteLine("Connected to server");
+                Debug.Log("Connected to server");
 
                 _networkStream = _tcpClient.GetStream();
 
@@ -27,7 +29,7 @@ namespace MonMulti
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Debug.LogError($"Error: {ex.Message}");
             }
         }
 
@@ -35,26 +37,48 @@ namespace MonMulti
         {
             if (_networkStream != null)
             {
-                byte[] messageBytes = Encoding.ASCII.GetBytes(message);
-                await _networkStream.WriteAsync(messageBytes, 0, messageBytes.Length);
-                Console.WriteLine($"Sent: {message}");
+                try
+                {
+                    byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+                    await _networkStream.WriteAsync(messageBytes, 0, messageBytes.Length);
+                    Debug.Log($"Sent: {message}");
 
-                byte[] buffer = new byte[1024];
-                int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
-                string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                Console.WriteLine($"Received: {response}");
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
+                    string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    Debug.Log($"Received: {response}");
 
-                return response;
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Error while sending/receiving message: {ex.Message}");
+                }
             }
-
             return string.Empty;
         }
 
         public void Disconnect()
         {
-            _networkStream?.Close();
-            _tcpClient?.Close();
-            Console.WriteLine("Disconnected from server.");
+            if (_networkStream != null)
+            {
+                _networkStream.Close();
+                _networkStream = null;
+            }
+
+            if (_tcpClient != null)
+            {
+                _tcpClient.Close();
+                _tcpClient = null;
+            }
+
+            Debug.Log("Disconnected from server.");
+        }
+
+        public async Task SendPlayerPositionAsync(Vector3 playerPosition)
+        {
+            string message = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
+            await SendMessageAsync(message);
         }
     }
 }
