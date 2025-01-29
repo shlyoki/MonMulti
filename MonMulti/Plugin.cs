@@ -2,34 +2,36 @@
 using HarmonyLib;
 using UnityEngine;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Sockets;
-
-///SUMMARY:
-///Added Server,Client.cs that actually work, made client and server connect.
-///TODO: Create Players for every character in the game, OPTIMIZE THIS SHIT, Shit-ton of error handling.
+using System.Xml.Serialization;
 
 namespace MonMulti
 {
-    [BepInPlugin(ModInfo.pluginGuid, ModInfo.pluginName, ModInfo.pluginVersion)]
+    [BepInPlugin(pluginGuid, pluginName, pluginVersion)]
     public class MonMultiMod : BaseUnityPlugin
     {
+        public const string pluginGuid = "monbazou.antalervin19.monmultiplayer";
+        public const string pluginName = "MonMultiClient";
+        public const string pluginVersion = "0.0.1.3";
+
         private Harmony _harmony;
         private bool isInitialized = false;
-        private Server _server;
+
+        private GameObject _cube;
+
+        // Client instance
+        private Client _client;
 
         private void Awake()
         {
             // Initialize Harmony
-            _harmony = new Harmony(ModInfo.pluginGuid);
+            _harmony = new Harmony(pluginGuid);
             _harmony.PatchAll();
-            Debug.Log($"{ModInfo.pluginName} has been loaded!");
+            Debug.Log($"{pluginName} has been loaded!");
 
-            // Initialize server
-            _server = new Server();
+            // Initialize client
+            _client = new Client();
         }
-
         private void Update()
         {
             if (GameData.IsGameInitialized && GameData.Player != null)
@@ -52,42 +54,38 @@ namespace MonMulti
 
                 string positionMessage = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
                 Debug.Log(positionMessage);
-                SendMessageToAllClients(positionMessage);
+                SendMessageToServerAsync(positionMessage);
             }
         }
 
         private void OnGameInitialization()
         {
-            Debug.Log("Game is ready! \n Initializing server...");
-            Task.Run(() => StartServer());
+            Debug.Log("Game is ready! \n Connecting to server...");
+
+            Task.Run(() => ConnectToServer());
         }
 
-        private async Task StartServer()
+        private async Task ConnectToServer()
         {
             try
             {
-                await _server.StartServerAsync();
+                await _client.ConnectToServerAsync();
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Error starting the server: {ex.Message}");
+                Debug.LogError($"Error connecting to the server: {ex.Message}");
             }
         }
 
-        private async Task SendMessageToAllClients(string message)
+        private async Task SendMessageToServerAsync(string message)
         {
-            await _server.SendMessageToAllClientsAsync(message);
-        }
-
-        private async Task SendMessageToClient(TcpClient client, string message)
-        {
-            await _server.SendMessageToClientAsync(client, message);
+            string response = await _client.SendMessageAsync(message);
         }
 
         private void OnDestroy()
         {
-            Debug.Log("Stopping server...");
-            _server.StopServer();
+            Debug.Log("Disconnecting from server...");
+            _client.Disconnect();
         }
     }
 }
