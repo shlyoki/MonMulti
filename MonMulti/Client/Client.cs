@@ -24,8 +24,6 @@ namespace MonMulti
                 Debug.Log("Connected to server");
 
                 _networkStream = _tcpClient.GetStream();
-
-                await SendMessageAsync("Hello Server!");
             }
             catch (Exception ex)
             {

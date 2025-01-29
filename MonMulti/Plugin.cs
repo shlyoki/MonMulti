@@ -78,7 +78,6 @@ namespace MonMulti
             string response = await _client.SendMessageAsync(message);
             if (!string.IsNullOrEmpty(response))
             {
-                // Optionally handle server response (if needed)
                 Debug.Log($"Server responded: {response}");
             }
         }
