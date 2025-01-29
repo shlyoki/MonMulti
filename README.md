@@ -9,3 +9,9 @@ Client connects to the defined address when user enters a save
 **↳These will be merged into a single code & dll when i get the UI working.**
 
 The *Client* and *Server* are both running asynchronous so they dont freeze and crash the game running on the main thread.
+
+## WIP:
+
+Showing connected players as game objects,
+
+Syncing ***Money***,***Ttime***, Maybe FriendShips...
