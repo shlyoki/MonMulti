@@ -6,6 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 
+///SUMMARY:
+///Added Server,Client.cs that actually work, made client and server connect.
+///TODO: Create Players for every character in the game, OPTIMIZE THIS SHIT, Shit-ton of error handling.
+
 namespace MonMulti
 {
     [BepInPlugin(ModInfo.pluginGuid, ModInfo.pluginName, ModInfo.pluginVersion)]
@@ -41,18 +45,21 @@ namespace MonMulti
         private void FixedUpdate()
         {
             if (!isInitialized) { return; }
+
             if (Time.frameCount % 50 == 0)
             {
-                SendMessageToAllClients("Update Sync from Server!");
+                Vector3 playerPosition = GameData.Player.transform.position;
+
+                string positionMessage = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
+                Debug.Log(positionMessage);
+                SendMessageToAllClients(positionMessage);
             }
         }
 
         private void OnGameInitialization()
         {
             Debug.Log("Game is ready! \n Initializing server...");
-
             Task.Run(() => StartServer());
-
         }
 
         private async Task StartServer()
@@ -70,13 +77,11 @@ namespace MonMulti
         private async Task SendMessageToAllClients(string message)
         {
             await _server.SendMessageToAllClientsAsync(message);
-            Debug.Log($"Message sent to all clients: {message}");
         }
 
         private async Task SendMessageToClient(TcpClient client, string message)
         {
             await _server.SendMessageToClientAsync(client, message);
-            Debug.Log($"Message sent to client: {message}");
         }
 
         private void OnDestroy()

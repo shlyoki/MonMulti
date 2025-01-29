@@ -47,9 +47,14 @@ namespace MonMulti
         private void FixedUpdate()
         {
             if (!isInitialized) { return; }
+
             if (Time.frameCount % 50 == 0)
             {
-                SendMessageToServerAsync("Message sent every 50 frames");
+                Vector3 playerPosition = GameData.Player.transform.position;
+
+                string positionMessage = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
+                Debug.Log(positionMessage);
+                SendMessageToServerAsync(positionMessage);
             }
         }
 
@@ -75,8 +80,6 @@ namespace MonMulti
         private async Task SendMessageToServerAsync(string message)
         {
             string response = await _client.SendMessageAsync(message);
-            Debug.Log($"Message sent to server: {message}");
-            Debug.Log($"Server responded: {response}");
         }
 
         private void OnDestroy()

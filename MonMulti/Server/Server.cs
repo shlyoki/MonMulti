@@ -63,8 +63,6 @@ namespace MonMulti
 
                     string receivedMessage = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                     Console.WriteLine($"Received message: {receivedMessage}");
-
-                    await SendMessageToClientAsync(tcpClient, "Message received");
                 }
             }
 
