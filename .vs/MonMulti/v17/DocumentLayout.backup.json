@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|c:\\users\\antalervin19\\documents\\github\\monmulti\\monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\client\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\client\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|c:\\users\\antalervin19\\documents\\github\\monmulti\\monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\modinfo\\modinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -34,30 +34,31 @@
               "RelativeToolTip": "MonMulti\\ModInfo\\ModInfo.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T23:13:55.953Z"
+              "WhenOpened": "2025-01-28T23:13:55.953Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Client.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Client\\Client.cs",
               "RelativeDocumentMoniker": "MonMulti\\Client\\Client.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Client\\Client.cs",
               "RelativeToolTip": "MonMulti\\Client\\Client.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAQwAwAAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAADYAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T23:13:20.109Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Plugin.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Plugin.cs",
               "RelativeDocumentMoniker": "MonMulti\\Plugin.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Plugin.cs",
               "RelativeToolTip": "MonMulti\\Plugin.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAQwBIAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAADwv0IAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-22T20:41:55.716Z",
               "EditorCaption": ""

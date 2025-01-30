@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace MonMulti
 {
-    [BepInPlugin(pluginGuid, pluginName, pluginVersion)]
+    [BepInPlugin(ModInfo.pluginGuid, ModInfo.pluginName, ModInfo.pluginVersion)]
     public class MonMultiMod : BaseUnityPlugin
     {
-        public const string pluginGuid = "monbazou.antalervin19.monmultiplayer";
-        public const string pluginName = "MonMultiClient";
-        public const string pluginVersion = "0.0.1.3";
 
         private Harmony _harmony;
         private bool isInitialized = false;
@@ -21,9 +18,9 @@ namespace MonMulti
         private void Awake()
         {
             // Initialize Harmony
-            _harmony = new Harmony(pluginGuid);
+            _harmony = new Harmony(ModInfo.pluginGuid);
             _harmony.PatchAll();
-            Debug.Log($"{pluginName} has been loaded!");
+            Debug.Log($"{ModInfo.pluginName} has been loaded!");
 
             // Initialize client
             _client = new Client();

@@ -14,6 +14,7 @@ namespace MonMulti
         private const int Port = 25565;
         private TcpClient _tcpClient;
         private NetworkStream _networkStream;
+        public bool DeveloperMode = false;
 
         public async Task ConnectToServerAsync()
         {
@@ -21,13 +22,14 @@ namespace MonMulti
             {
                 _tcpClient = new TcpClient();
                 await _tcpClient.ConnectAsync(ServerAddress, Port);
+
                 Debug.Log("Connected to server");
 
                 _networkStream = _tcpClient.GetStream();
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Error: {ex.Message}");
+                if (DeveloperMode) { Debug.LogError($"Error: {ex.Message}"); ; }
             }
         }
 
@@ -39,18 +41,18 @@ namespace MonMulti
                 {
                     byte[] messageBytes = Encoding.ASCII.GetBytes(message);
                     await _networkStream.WriteAsync(messageBytes, 0, messageBytes.Length);
-                    Debug.Log($"Sent: {message}");
+                    if (DeveloperMode) { Debug.Log($"Sent: {message}"); }
 
                     byte[] buffer = new byte[1024];
                     int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
                     string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                    Debug.Log($"Received: {response}");
+                    if (DeveloperMode) { Debug.Log($"Received: {response}"); }
 
                     return response;
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"Error while sending/receiving message: {ex.Message}");
+                    if (DeveloperMode) { Debug.LogError($"Error while sending/receiving message: {ex.Message}"); }
                 }
             }
             return string.Empty;
