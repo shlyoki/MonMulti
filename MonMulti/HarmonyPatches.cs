@@ -16,4 +16,19 @@ namespace MonMulti
             GameData.IsGameInitialized = true; //Mark the game as initialized
         }
     }
+
+    /*[HarmonyPatch(typeof(GameManager), "GetPlayerData")]
+    public static class GetPlayerDataPatch
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref PlayerData __result)
+        {
+            if (__result != null)
+            {
+                int cash = __result.intCash;
+                Debug.Log($"[MonMulti] Player Cash: {cash}");
+                GameData.PlayerCash = cash;
+            }
+        }
+    }*/
 }

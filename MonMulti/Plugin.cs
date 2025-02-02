@@ -3,13 +3,13 @@ using HarmonyLib;
 using UnityEngine;
 using System;
 using System.Threading.Tasks;
+using MonMulti;
 
 namespace MonMulti
 {
     [BepInPlugin(ModInfo.pluginGuid, ModInfo.pluginName, ModInfo.pluginVersion)]
     public class MonMultiMod : BaseUnityPlugin
     {
-
         private Harmony _harmony;
         private bool isInitialized = false;
 
@@ -24,6 +24,11 @@ namespace MonMulti
 
             // Initialize client
             _client = new Client();
+
+            // Initialize GUI
+            GameObject guiObject = new GameObject("MonMulti_GUI");
+            guiObject.AddComponent<GUIManager>();
+            DontDestroyOnLoad(guiObject);
         }
 
         private void Update()
@@ -42,7 +47,7 @@ namespace MonMulti
         {
             if (!isInitialized) { return; }
 
-            if (Time.frameCount % 50 == 0)
+            if (Time.frameCount % 25 == 0)
             {
                 Vector3 playerPosition = GameData.Player.transform.position;
 
