@@ -51,14 +51,17 @@ namespace MonMulti
             Vector3 playerPosition = GameData.Player.transform.position;
             Quaternion playerRotation = GameData.Player.transform.rotation;
 
+            Vector3 konigPosition = GameData.KonigVehicle != null ? GameData.KonigVehicle.transform.position : Vector3.zero;
+            Quaternion konigRotation = GameData.KonigVehicle != null ? GameData.KonigVehicle.transform.rotation : Quaternion.identity;
+
             var packet = new MonMultiPacket
             {
-                PlayerPosition = new float[] { Round(playerPosition.x), Round(playerPosition.y), Round(playerPosition.z) },  // X, Y, Z (2 fpp)
-                PlayerRotation = new float[] { Round(playerRotation.x), Round(playerRotation.y), Round(playerRotation.z), Round(playerRotation.w) }, // X, Y, Z, W (2 fpp)
-                KonigPosition = new float[] { Round(0), Round(0), Round(0) },  // X, Y, Z (2 fpp) (placeholder)
-                KonigRotation = new float[] { Round(0), Round(0), Round(0), Round(0) }, // X, Y, Z, W (2 fpp) (placeholder)
-                Cash = 0, // Integer
-                Time = 0  // Integer
+                PlayerPosition = new float[] { Round(playerPosition.x), Round(playerPosition.y), Round(playerPosition.z) },
+                PlayerRotation = new float[] { Round(playerRotation.x), Round(playerRotation.y), Round(playerRotation.z), Round(playerRotation.w) },
+                KonigPosition = new float[] { Round(konigPosition.x), Round(konigPosition.y), Round(konigPosition.z) },
+                KonigRotation = new float[] { Round(konigRotation.x), Round(konigRotation.y), Round(konigRotation.z), Round(konigRotation.w) },
+                Cash = 0,
+                Time = 0
             };
 
             SendJsonPacketToServerAsync(packet);
@@ -67,6 +70,16 @@ namespace MonMulti
         private void OnGameInitialization()
         {
             Debug.Log("Game is ready! \n Connecting to server...");
+
+            foreach (var vehicle in GameData.Vehicles)
+            {
+                if (vehicle.gameObject.name == "Konig")
+                {
+                    GameData.KonigVehicle = vehicle.gameObject;
+                    Debug.Log($"[MonMulti] Konig vehicle found and stored at position: {GameData.KonigVehicle.transform.position}");
+                    break;
+                }
+            }
         }
 
         private async Task SendJsonPacketToServerAsync(MonMultiPacket packet)
@@ -99,9 +112,4 @@ namespace MonMulti
         public int Cash { get; set; }
         public int Time { get; set; }
     }
-}
-
-foreach (var vehicle in GameData.Vehicles)
-{
-    Debug.Log($"Vehicle found at position: {vehicle.transform.position}");
 }
