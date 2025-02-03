@@ -26,7 +26,7 @@ namespace MonMulti
             if (__result != null)
             {
                 int cash = __result.intCash;
-                Debug.Log($"[MonMulti] Player Cash: {cash}");
+                Debug.Log($"[MonMulti] Player Cash: {cash}");s
                 GameData.PlayerCash = cash;
             }
         }
@@ -37,12 +37,10 @@ namespace MonMulti
     {
         static void Postfix(NWH.Vehicle __instance)
         {
-            Debug.Log("Vehicle Awake() has been patched.");
-
-            if (GameData.PlayerVehicle == null)
+            if (!GameData.vehicles.Contains(__instance))
             {
-                GameData.PlayerVehicle = __instance;
-                Debug.Log("[MonMulti] Player vehicle has been stored in GameData.");
+                GameData.vehicles.Add(__instance);
+                Debug.Log($"[MonMulti] Added vehicle '{__instance.gameObject.name}' to GameData. Total vehicles: {GameData.vehicles.Count}");
             }
         }
     }

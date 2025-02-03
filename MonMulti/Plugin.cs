@@ -49,16 +49,23 @@ namespace MonMulti
 
             // Send Player Position
             Vector3 playerPosition = GameData.Player.transform.position;
-            playerPosition = new Vector3(-106.3f, 102.6f, -269f);
             Quaternion playerRotation = GameData.Player.transform.rotation;
 
             string playerPositionMessage = $"PLAYER_POS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
-            string playerRotationMessage = $"PLAYER_ROT:{playerRotation.x},{playerRotation.y},{playerRotation.z},{playerRotation.w}";
+            //string playerRotationMessage = $"PLAYER_ROT:{playerRotation.x},{playerRotation.y},{playerRotation.z},{playerRotation.w}";
 
             SendMessageToServerAsync(playerPositionMessage);
-            SendMessageToServerAsync(playerRotationMessage);
+            //SendMessageToServerAsync(playerRotationMessage);
 
-            // Send Vehicle Position & Rotation if Available
+            foreach (var vehicle in GameData.vehicles)
+            {
+                if (vehicle.gameObject.name == "Konig")
+                {
+                    Debug.Log($"Vehicle found at position: {vehicle.transform.position}");
+                }
+            }
+
+            /*
             if (GameData.PlayerVehicle != null)
             {
                 Vector3 vehiclePosition = GameData.PlayerVehicle.transform.position;
@@ -69,7 +76,7 @@ namespace MonMulti
 
                 SendMessageToServerAsync(vehiclePositionMessage);
                 SendMessageToServerAsync(vehicleRotationMessage);
-            }
+            }*/
         }
 
         private void OnGameInitialization()
@@ -97,10 +104,11 @@ namespace MonMulti
 /*MONMULTI COMMUNICATION PROTOCOL
  *
  *Using json:
- *PlayerPosition, XYZ 3 fpp
- *PlayerRotation, XYZQ 3 fpp
- *KonigPosition, XYZ 3 fpp   (If possible)
- *KonigRotation, XYZQ 3 fpp
+ *PlayerPosition, XYZ 2 fpp
+ *PlayerRotation, XYZQ 2 fpp
+ *KonigPosition, XYZ 2 fpp   (If possible)
+ *KonigRotation, XYZQ 2 fpp   (If possible)
  *Cash, intager
- *Time, String
+ *Time, intager
+ *
 */

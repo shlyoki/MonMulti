@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace MonMulti
 {
@@ -7,6 +8,6 @@ namespace MonMulti
         public static PlayerInteractable Player { get; set; }
         public static bool IsGameInitialized { get; set; }
         public static int PlayerCash { get; set; } = 0;
-        public static NWH.Vehicle PlayerVehicle { get; set; }
+        public static List<NWH.Vehicle> vehicles { get; private set; } = new List<NWH.Vehicle>();
     }
 }
