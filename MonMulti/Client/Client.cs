@@ -10,26 +10,24 @@ namespace MonMulti
 {
     public class Client
     {
-        private const string ServerAddress = "127.0.0.1";
-        private const int Port = 25565;
         private TcpClient _tcpClient;
         private NetworkStream _networkStream;
         public bool DeveloperMode = false;
 
-        public async Task ConnectToServerAsync()
+        public async Task ConnectToServerAsync(string ipAddress, int port)
         {
             try
             {
                 _tcpClient = new TcpClient();
-                await _tcpClient.ConnectAsync(ServerAddress, Port);
+                await _tcpClient.ConnectAsync(ipAddress, port);
 
-                Debug.Log("Connected to server");
+                Debug.Log($"Connected to server at {ipAddress}:{port}");
 
                 _networkStream = _tcpClient.GetStream();
             }
             catch (Exception ex)
             {
-                if (DeveloperMode) { Debug.LogError($"Error: {ex.Message}"); ; }
+                if (DeveloperMode) { Debug.LogError($"Error: {ex.Message}"); }
             }
         }
 

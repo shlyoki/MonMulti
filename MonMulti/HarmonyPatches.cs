@@ -31,4 +31,19 @@ namespace MonMulti
             }
         }
     }*/
+
+    [HarmonyPatch(typeof(NWH.Vehicle), "Awake")]
+    public class VehicleAwakePatch
+    {
+        static void Postfix(NWH.Vehicle __instance)
+        {
+            Debug.Log("Vehicle Awake() has been patched.");
+
+            if (GameData.PlayerVehicle == null)
+            {
+                GameData.PlayerVehicle = __instance;
+                Debug.Log("[MonMulti] Player vehicle has been stored in GameData.");
+            }
+        }
+    }
 }

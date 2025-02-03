@@ -12,7 +12,6 @@ namespace MonMulti
     {
         private Harmony _harmony;
         private bool isInitialized = false;
-
         private Client _client;
 
         private void Awake()
@@ -27,7 +26,8 @@ namespace MonMulti
 
             // Initialize GUI
             GameObject guiObject = new GameObject("MonMulti_GUI");
-            guiObject.AddComponent<GUIManager>();
+            GUIManager guiManager = guiObject.AddComponent<GUIManager>();
+            guiManager.SetClient(_client);
             DontDestroyOnLoad(guiObject);
         }
 
@@ -47,32 +47,34 @@ namespace MonMulti
         {
             if (!isInitialized) { return; }
 
-            if (Time.frameCount % 25 == 0)
+            // Send Player Position
+            Vector3 playerPosition = GameData.Player.transform.position;
+            playerPosition = new Vector3(-106.3f, 102.6f, -269f);
+            Quaternion playerRotation = GameData.Player.transform.rotation;
+
+            string playerPositionMessage = $"PLAYER_POS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
+            string playerRotationMessage = $"PLAYER_ROT:{playerRotation.x},{playerRotation.y},{playerRotation.z},{playerRotation.w}";
+
+            SendMessageToServerAsync(playerPositionMessage);
+            SendMessageToServerAsync(playerRotationMessage);
+
+            // Send Vehicle Position & Rotation if Available
+            if (GameData.PlayerVehicle != null)
             {
-                Vector3 playerPosition = GameData.Player.transform.position;
+                Vector3 vehiclePosition = GameData.PlayerVehicle.transform.position;
+                Quaternion vehicleRotation = GameData.PlayerVehicle.transform.rotation;
 
-                string positionMessage = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
+                string vehiclePositionMessage = $"VEHICLE_POS:{vehiclePosition.x},{vehiclePosition.y},{vehiclePosition.z}";
+                string vehicleRotationMessage = $"VEHICLE_ROT:{vehicleRotation.x},{vehicleRotation.y},{vehicleRotation.z},{vehicleRotation.w}";
 
-                SendMessageToServerAsync(positionMessage);
+                SendMessageToServerAsync(vehiclePositionMessage);
+                SendMessageToServerAsync(vehicleRotationMessage);
             }
         }
 
         private void OnGameInitialization()
         {
             Debug.Log("Game is ready! \n Connecting to server...");
-            Task.Run(() => ConnectToServer());
-        }
-
-        private async Task ConnectToServer()
-        {
-            try
-            {
-                await _client.ConnectToServerAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Error connecting to the server: {ex.Message}");
-            }
         }
 
         private async Task SendMessageToServerAsync(string message)
@@ -91,3 +93,14 @@ namespace MonMulti
         }
     }
 }
+
+/*MONMULTI COMMUNICATION PROTOCOL
+ *
+ *Using json:
+ *PlayerPosition, XYZ 3 fpp
+ *PlayerRotation, XYZQ 3 fpp
+ *KonigPosition, XYZ 3 fpp   (If possible)
+ *KonigRotation, XYZQ 3 fpp
+ *Cash, intager
+ *Time, String
+*/
