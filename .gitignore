@@ -2,3 +2,5 @@ MonMulti.dll
 *.vsidx
 ./MonMulti/bin
 ./MonMulti/obj
+./MonMulti/bin/*
+./MonMulti/obj/*
