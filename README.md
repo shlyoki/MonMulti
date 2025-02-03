@@ -10,13 +10,9 @@ Completed:
 ✅ UI using "F7": UI for the game developed and accessible via "F7".
 
 ✅ Getting Player Data:
-
   Position (Pos)
-  
   Rotation (Rot)
-  
   Cash
-  
   Time
   
 ✅ Getting Konig Data:
