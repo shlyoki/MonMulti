@@ -12,6 +12,6 @@ The *Client* and *Server* are both running asynchronous so they dont freeze and 
 
 ## WIP:
 
-Showing connected players as game objects,
+Showing connected players as game objects (capsules),
 
-Syncing ***Money***,***Ttime***, Maybe FriendShips...
+Syncing ***Money***,***Time***, Maybe FriendShips...
