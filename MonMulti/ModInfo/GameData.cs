@@ -7,8 +7,15 @@ namespace MonMulti
     {
         public static PlayerInteractable Player { get; set; }
         public static bool IsGameInitialized { get; set; }
-        public static int PlayerCash { get; set; } = 0;
+
+        // Vehicles
         public static List<NWH.Vehicle> Vehicles { get; set; } = new List<NWH.Vehicle>();
         public static GameObject KonigVehicle { get; set; }
+
+        // Player Data
+        public static int Cash { get; set; } = 0;
+        public static int Minute { get; set; } = 0;
+        public static int Hour { get; set; } = 0;
+        public static int DayOfTheWeek { get; set; } = 0;
     }
 }
