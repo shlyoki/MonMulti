@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MonMulti
 {
@@ -31,26 +32,28 @@ namespace MonMulti
             }
         }
 
-        public async Task<string> SendMessageAsync(string message)
+        public async Task<string> SendJsonPacketAsync(string jsonMessage)
         {
             if (_networkStream != null)
             {
                 try
                 {
-                    byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+                    byte[] messageBytes = Encoding.UTF8.GetBytes(jsonMessage);
                     await _networkStream.WriteAsync(messageBytes, 0, messageBytes.Length);
-                    if (DeveloperMode) { Debug.Log($"Sent: {message}"); }
+
+                    if (DeveloperMode) { Debug.Log($"Sent JSON: {jsonMessage}"); }
 
                     byte[] buffer = new byte[1024];
                     int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
-                    string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
                     if (DeveloperMode) { Debug.Log($"Received: {response}"); }
 
                     return response;
                 }
                 catch (Exception ex)
                 {
-                    if (DeveloperMode) { Debug.LogError($"Error while sending/receiving message: {ex.Message}"); }
+                    if (DeveloperMode) { Debug.LogError($"Error while sending/receiving JSON: {ex.Message}"); }
                 }
             }
             return string.Empty;
@@ -71,12 +74,6 @@ namespace MonMulti
             }
 
             Debug.Log("Disconnected from server.");
-        }
-
-        public async Task SendPlayerPositionAsync(Vector3 playerPosition)
-        {
-            string message = $"CPOS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
-            await SendMessageAsync(message);
         }
     }
 }

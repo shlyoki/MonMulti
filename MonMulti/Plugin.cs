@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Threading.Tasks;
 using MonMulti;
+using Newtonsoft.Json;
 
 namespace MonMulti
 {
@@ -45,38 +46,22 @@ namespace MonMulti
 
         private void FixedUpdate()
         {
-            if (!isInitialized) { return; }
+            if (!isInitialized || GameData.Player == null) { return; }
 
-            // Send Player Position
             Vector3 playerPosition = GameData.Player.transform.position;
             Quaternion playerRotation = GameData.Player.transform.rotation;
 
-            string playerPositionMessage = $"PLAYER_POS:{playerPosition.x},{playerPosition.y},{playerPosition.z}";
-            //string playerRotationMessage = $"PLAYER_ROT:{playerRotation.x},{playerRotation.y},{playerRotation.z},{playerRotation.w}";
-
-            SendMessageToServerAsync(playerPositionMessage);
-            //SendMessageToServerAsync(playerRotationMessage);
-
-            foreach (var vehicle in GameData.vehicles)
+            var packet = new MonMultiPacket
             {
-                if (vehicle.gameObject.name == "Konig")
-                {
-                    Debug.Log($"Vehicle found at position: {vehicle.transform.position}");
-                }
-            }
+                PlayerPosition = new float[] { Round(playerPosition.x), Round(playerPosition.y), Round(playerPosition.z) },  // X, Y, Z (2 fpp)
+                PlayerRotation = new float[] { Round(playerRotation.x), Round(playerRotation.y), Round(playerRotation.z), Round(playerRotation.w) }, // X, Y, Z, W (2 fpp)
+                KonigPosition = new float[] { Round(0), Round(0), Round(0) },  // X, Y, Z (2 fpp) (placeholder)
+                KonigRotation = new float[] { Round(0), Round(0), Round(0), Round(0) }, // X, Y, Z, W (2 fpp) (placeholder)
+                Cash = 0, // Integer
+                Time = 0  // Integer
+            };
 
-            /*
-            if (GameData.PlayerVehicle != null)
-            {
-                Vector3 vehiclePosition = GameData.PlayerVehicle.transform.position;
-                Quaternion vehicleRotation = GameData.PlayerVehicle.transform.rotation;
-
-                string vehiclePositionMessage = $"VEHICLE_POS:{vehiclePosition.x},{vehiclePosition.y},{vehiclePosition.z}";
-                string vehicleRotationMessage = $"VEHICLE_ROT:{vehicleRotation.x},{vehicleRotation.y},{vehicleRotation.z},{vehicleRotation.w}";
-
-                SendMessageToServerAsync(vehiclePositionMessage);
-                SendMessageToServerAsync(vehicleRotationMessage);
-            }*/
+            SendJsonPacketToServerAsync(packet);
         }
 
         private void OnGameInitialization()
@@ -84,9 +69,10 @@ namespace MonMulti
             Debug.Log("Game is ready! \n Connecting to server...");
         }
 
-        private async Task SendMessageToServerAsync(string message)
+        private async Task SendJsonPacketToServerAsync(MonMultiPacket packet)
         {
-            string response = await _client.SendMessageAsync(message);
+            string jsonMessage = JsonConvert.SerializeObject(packet);
+            string response = await _client.SendJsonPacketAsync(jsonMessage);
             if (!string.IsNullOrEmpty(response))
             {
                 Debug.Log($"Server responded: {response}");
@@ -98,17 +84,24 @@ namespace MonMulti
             Debug.Log("Disconnecting from server...");
             _client.Disconnect();
         }
+
+        private float Round(float value)
+        {
+            return (float)Math.Round(value, 2);
+        }
+    }
+    public class MonMultiPacket
+    {
+        public float[] PlayerPosition { get; set; }
+        public float[] PlayerRotation { get; set; }
+        public float[] KonigPosition { get; set; }
+        public float[] KonigRotation { get; set; }
+        public int Cash { get; set; }
+        public int Time { get; set; }
     }
 }
 
-/*MONMULTI COMMUNICATION PROTOCOL
- *
- *Using json:
- *PlayerPosition, XYZ 2 fpp
- *PlayerRotation, XYZQ 2 fpp
- *KonigPosition, XYZ 2 fpp   (If possible)
- *KonigRotation, XYZQ 2 fpp   (If possible)
- *Cash, intager
- *Time, intager
- *
-*/
+foreach (var vehicle in GameData.Vehicles)
+{
+    Debug.Log($"Vehicle found at position: {vehicle.transform.position}");
+}

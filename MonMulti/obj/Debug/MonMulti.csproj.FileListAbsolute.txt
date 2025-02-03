@@ -24,3 +24,4 @@ C:\Users\antalervin19\Documents\GitHub\MonMulti\MonMulti\obj\Debug\MonMulti.dll
 C:\Users\antalervin19\Documents\GitHub\MonMulti\MonMulti\obj\Debug\MonMulti.pdb
 C:\Users\antalervin19\Documents\GitHub\MonMulti\MonMulti\bin\Debug\UnityEngine.IMGUIModule.dll
 C:\Users\antalervin19\Documents\GitHub\MonMulti\MonMulti\bin\Debug\UnityEngine.InputLegacyModule.dll
+C:\Users\antalervin19\Documents\GitHub\MonMulti\MonMulti\bin\Debug\Newtonsoft.Json.dll
