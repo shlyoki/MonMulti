@@ -11,15 +11,20 @@ namespace MonMulti
     [BepInPlugin(ModInfo.pluginGuid, ModInfo.pluginName, ModInfo.pluginVersion)]
     public class MonMultiMod : BaseUnityPlugin
     {
-        private Harmony _harmony;
-        private bool isInitialized = false;
         private Client _client;
+        private Harmony _harmony;
 
+        private bool isInitialized = false;
+        private bool isPlayerDataPatched = false;
+       
         private void Awake()
         {
             // Initialize Harmony
             _harmony = new Harmony(ModInfo.pluginGuid);
-            _harmony.PatchAll();
+
+            _harmony.PatchAll(typeof(GameplayAwakePatch));
+            _harmony.PatchAll(typeof(VehicleAwakePatch));
+
             Debug.Log($"{ModInfo.pluginName} has been loaded!");
 
             // Initialize client
@@ -54,6 +59,7 @@ namespace MonMulti
             Vector3 konigPosition = GameData.KonigVehicle != null ? GameData.KonigVehicle.transform.position : Vector3.zero;
             Quaternion konigRotation = GameData.KonigVehicle != null ? GameData.KonigVehicle.transform.rotation : Quaternion.identity;
 
+
             var packet = new MonMultiPacket
             {
                 PlayerPosition = new float[] { Round(playerPosition.x), Round(playerPosition.y), Round(playerPosition.z) },
@@ -69,7 +75,19 @@ namespace MonMulti
 
         private void OnGameInitialization()
         {
-            Debug.Log("Game is ready! \n Connecting to server...");
+            /*if (!isPlayerDataPatched)
+            {
+                try
+                {
+                    _harmony.PatchAll(typeof(PlayerDataPatch));
+                    isPlayerDataPatched = true;
+                    Debug.Log("[MonMulti] Successfully patched PlayerData.");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[MonMulti] Failed to patch PlayerData: {ex.Message}");
+                }
+            }*/
 
             foreach (var vehicle in GameData.Vehicles)
             {
@@ -109,7 +127,7 @@ namespace MonMulti
         public float[] PlayerRotation { get; set; }
         public float[] KonigPosition { get; set; }
         public float[] KonigRotation { get; set; }
-        public int Cash { get; set; }
-        public int Time { get; set; }
+        public int Cash { get; set; } //Unused for now
+        public int Time { get; set; } //Unused for now
     }
 }
