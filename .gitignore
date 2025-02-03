@@ -1,2 +1,4 @@
 MonMulti.dll
 *.vsidx
+./bin
+./obj
