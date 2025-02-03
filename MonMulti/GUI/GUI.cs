@@ -98,7 +98,6 @@ namespace MonMulti
                 if (int.TryParse(port, out int PortNumber))
                 {
                     Debug.Log($"Starting server at port: {PortNumber}");
-                    Task.Run(() => _client.ConnectToServerAsync(ipAddress, PortNumber));
                 }
                 else
                 {
