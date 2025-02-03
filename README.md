@@ -1,14 +1,22 @@
 # MonMulti
 Work-In-Progress multiplayer mod for the game Mon Bazou
 
-## Working:
-Server starts when the user enters a save
+## TODO:
+Completed:
+✅ Joining and Hosting Games: Implemented functionality for players to join and host games.
+✅ UI using "F7": UI for the game developed and accessible via "F7".
+✅ Getting Player Data:
+  Position (Pos)
+  Rotation (Rot)
+  Cash
+  Time
+✅ Getting World Data:
+  Car Position (Car Pos)
+  Car Rotation (Car Rot)
 
-Client connects to the defined address when user enters a save
-
-**↳These will be merged into a single code & dll after i manage to establish a good enough connection between Client & Server (For now server is a separate code, so i dont have to run the game twice to test!)**
-
-The *Client* and *Server* are both running asynchronous so they dont freeze and crash the game running on the main thread.
+### In Progress:
+  🔄 Syncing Multiple Players on Server:
+  Work is ongoing to synchronize multiple players across the server.
 
 ## WIP:
 
