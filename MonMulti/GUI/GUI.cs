@@ -8,19 +8,13 @@ namespace MonMulti
     public class GUIManager : MonoBehaviour
     {
         private bool _showGUI = false;
-        private string ipAddress = "127.0.0.1";
-        private string port = "25565";
+        public string ipAddress = "127.0.0.1";
+        public string port = "25565";
 
-        private Client _client;
         private int _selectedTab = 0;
         private bool _isConnected = false;
 
         private Rect windowRect = new Rect(100, 100, 250, 250);
-
-        public void SetClient(Client client)
-        {
-            _client = client;
-        }
 
         private void Update()
         {
@@ -76,7 +70,6 @@ namespace MonMulti
                 if (_isConnected)
                 {
                     Debug.Log("Disconnecting from server...");
-                    _client.Disconnect();
                     _isConnected = false;
                 }
                 else
@@ -84,14 +77,6 @@ namespace MonMulti
                     if (int.TryParse(port, out int PortNumber) && !string.IsNullOrEmpty(ipAddress))
                     {
                         Debug.Log($"Joining server at: {ipAddress}:{PortNumber}");
-                        Task.Run(async () =>
-                        {
-                            bool success = await _client.ConnectToServerAsync(ipAddress, PortNumber);
-                            if (success)
-                            {
-                                _isConnected = true;
-                            }
-                        });
                     }
                     else
                     {
