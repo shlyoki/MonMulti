@@ -13,7 +13,7 @@ namespace MonMulti
         private TcpClient _tcpClient;
         private NetworkStream _networkStream;
         private CancellationTokenSource _cancellationTokenSource;
-        private bool _isConnected = false;
+        public bool _isConnected = false;
 
         public event Action<string> OnMessageReceived;
 

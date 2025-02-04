@@ -16,7 +16,7 @@ namespace MonMulti
         private Harmony _harmony;
 
         private bool isInitialized = false;
-        private bool DeveloperMode = false;
+        private bool DeveloperMode = true;
 
         private void Awake()
         {
@@ -50,7 +50,10 @@ namespace MonMulti
 
         private void FixedUpdate()
         {
-            if (!isInitialized || GameData.Player == null) { return; }
+            if (!isInitialized || GameData.Player == null || !_client._isConnected)
+            {
+                return;
+            }
 
             Vector3 playerPosition = GameData.Player.transform.position;
             Quaternion playerRotation = GameData.Player.transform.rotation;
