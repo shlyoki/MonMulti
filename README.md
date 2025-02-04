@@ -12,8 +12,8 @@ Work-In-Progress multiplayer mod for the game Mon Bazou
   - ❌ Cash
   - ❌ Time
 - ✅ **Getting Konig Data**:
-  - Konig Position
-  - Konig Rotation
+  - ✅ Konig Position
+  - ✅ Konig Rotation
 
 ### In Progress:
 - 🔄 **Syncing Multiple Players on Server**:
