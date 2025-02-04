@@ -67,11 +67,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\Client.cs" />
+    <Compile Include="Networking\Client.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="ModInfo\GameData.cs" />
     <Compile Include="ModInfo\ModInfo.cs" />
+    <Compile Include="Networking\Server.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

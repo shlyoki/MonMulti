@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonMulti
+namespace MonMulti.Networking
 {
     class AsyncClient
     {
@@ -42,6 +42,12 @@ namespace MonMulti
             if (DebugMode) { Console.WriteLine("Message sent"); }
 
             await Task.Delay(-1);
+        }
+
+        public async Task SendMessageAsync(NetworkStream stream, string message)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+            await stream.WriteAsync(data, 0, data.Length);
         }
 
         private async Task ReceiveMessagesAsync(NetworkStream stream)

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using Newtonsoft.Json;
+using MonMulti.Networking;
 
 namespace MonMulti
 {
@@ -13,6 +14,9 @@ namespace MonMulti
 
         private int _selectedTab = 0;
         private bool _isConnected = false;
+        private bool _isHosting = false;
+        private AsyncClient _client;
+        private AsyncServer _server;
 
         private Rect windowRect = new Rect(100, 100, 250, 250);
 
@@ -21,6 +25,16 @@ namespace MonMulti
             if (Input.GetKeyDown(KeyCode.F7))
             {
                 _showGUI = !_showGUI;
+            }
+
+            if (_isConnected && _client != null)
+            {
+                _ = _client.ConnectAndSendAsync("Hello, server!");
+            }
+
+            if (_isHosting && _server != null)
+            {
+                _ = _server.StartAsync();
             }
         }
 
@@ -77,6 +91,8 @@ namespace MonMulti
                     if (int.TryParse(port, out int PortNumber) && !string.IsNullOrEmpty(ipAddress))
                     {
                         Debug.Log($"Joining server at: {ipAddress}:{PortNumber}");
+                        _client = new AsyncClient(ipAddress, PortNumber);
+                        _isConnected = true;
                     }
                     else
                     {
@@ -96,6 +112,8 @@ namespace MonMulti
                 if (int.TryParse(port, out int PortNumber))
                 {
                     Debug.Log($"Starting server at port: {PortNumber}");
+                    _server = new AsyncServer(PortNumber);
+                    _isHosting = true;
                 }
                 else
                 {
