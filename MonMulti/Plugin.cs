@@ -2,6 +2,7 @@
 using HarmonyLib;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MonMulti;
 using Newtonsoft.Json;
@@ -15,17 +16,15 @@ namespace MonMulti
         private Harmony _harmony;
 
         private bool isInitialized = false;
-        private bool isPlayerDataPatched = false;
-       
+        private bool DeveloperMode = false;
+
         private void Awake()
         {
             // Initialize Harmony
             _harmony = new Harmony(ModInfo.pluginGuid);
+            _harmony.PatchAll();
 
-            _harmony.PatchAll(typeof(GameplayAwakePatch));
-            _harmony.PatchAll(typeof(VehicleAwakePatch));
-
-            Debug.Log($"{ModInfo.pluginName} has been loaded!");
+            if (DeveloperMode) { Debug.Log($"{ModInfo.pluginName} has been loaded!"); }
 
             // Initialize client
             _client = new Client();
@@ -59,7 +58,6 @@ namespace MonMulti
             Vector3 konigPosition = GameData.KonigVehicle != null ? GameData.KonigVehicle.transform.position : Vector3.zero;
             Quaternion konigRotation = GameData.KonigVehicle != null ? GameData.KonigVehicle.transform.rotation : Quaternion.identity;
 
-
             var packet = new MonMultiPacket
             {
                 PlayerPosition = new float[] { Round(playerPosition.x), Round(playerPosition.y), Round(playerPosition.z) },
@@ -75,26 +73,11 @@ namespace MonMulti
 
         private void OnGameInitialization()
         {
-            /*if (!isPlayerDataPatched)
-            {
-                try
-                {
-                    _harmony.PatchAll(typeof(PlayerDataPatch));
-                    isPlayerDataPatched = true;
-                    Debug.Log("[MonMulti] Successfully patched PlayerData.");
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"[MonMulti] Failed to patch PlayerData: {ex.Message}");
-                }
-            }*/
-
             foreach (var vehicle in GameData.Vehicles)
             {
                 if (vehicle.gameObject.name == "Konig")
                 {
                     GameData.KonigVehicle = vehicle.gameObject;
-                    Debug.Log($"[MonMulti] Konig vehicle found and stored at position: {GameData.KonigVehicle.transform.position}");
                     break;
                 }
             }
@@ -104,15 +87,39 @@ namespace MonMulti
         {
             string jsonMessage = JsonConvert.SerializeObject(packet);
             string response = await _client.SendJsonPacketAsync(jsonMessage);
+
             if (!string.IsNullOrEmpty(response))
             {
-                Debug.Log($"Server responded: {response}");
+                if (DeveloperMode) { Debug.Log($"Server responded: {response}"); }
+                ProcessServerResponse(response);
+            }
+        }
+
+        private void ProcessServerResponse(string response)
+        {
+            try
+            {
+                var serverData = JsonConvert.DeserializeObject<ServerResponse>(response);
+
+                if (serverData != null)
+                {
+                    Debug.Log($"Your PlayerID: {serverData.PlayerId}");
+
+                    if (serverData.Players != null)
+                    {
+                        GameData.UpdatePlayerList(serverData.Players);
+                        if (DeveloperMode) { Debug.Log($"Updated player list: {string.Join(", ", GameData.PlayerIDs)}"); }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (DeveloperMode) { Debug.LogError($"Failed to process server response: {ex.Message}"); }
             }
         }
 
         private void OnDestroy()
         {
-            Debug.Log("Disconnecting from server...");
             _client.Disconnect();
         }
 
@@ -121,13 +128,27 @@ namespace MonMulti
             return (float)Math.Round(value, 2);
         }
     }
+
     public class MonMultiPacket
     {
         public float[] PlayerPosition { get; set; }
         public float[] PlayerRotation { get; set; }
         public float[] KonigPosition { get; set; }
         public float[] KonigRotation { get; set; }
-        public int Cash { get; set; } //Unused for now
-        public int Time { get; set; } //Unused for now
+        public int Cash { get; set; }
+        public int Time { get; set; }
     }
+
+    public class ServerResponse
+    {
+        [JsonProperty("playerId")]
+        public string PlayerId { get; set; }
+
+        [JsonProperty("playerCount")]
+        public int PlayerCount { get; set; }
+
+        [JsonProperty("players")]
+        public List<string> Players { get; set; }
+    }
+
 }

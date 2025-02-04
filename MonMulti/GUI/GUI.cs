@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace MonMulti
 {
@@ -12,6 +13,7 @@ namespace MonMulti
 
         private Client _client;
         private int _selectedTab = 0;
+        private bool _isConnected = false;
 
         private Rect windowRect = new Rect(100, 100, 250, 250);
 
@@ -67,23 +69,34 @@ namespace MonMulti
             GUI.Label(new Rect(20, 120, 200, 20), "Port:");
             port = GUI.TextField(new Rect(20, 140, 210, 20), port);
 
-            if (GUI.Button(new Rect(20, 170, 210, 30), "Join Game"))
+            string buttonLabel = _isConnected ? "Disconnect" : "Join Game";
+
+            if (GUI.Button(new Rect(20, 170, 210, 30), buttonLabel))
             {
-                if (int.TryParse(port, out int PortNumber))
+                if (_isConnected)
                 {
-                    if (!string.IsNullOrEmpty(ipAddress))
-                    {
-                        Debug.Log($"Joining server at: {ipAddress}:{PortNumber}");
-                        Task.Run(() => _client.ConnectToServerAsync(ipAddress, PortNumber));
-                    }
-                    else
-                    {
-                        Debug.LogError("Please enter a valid IP address.");
-                    }
+                    Debug.Log("Disconnecting from server...");
+                    _client.Disconnect();
+                    _isConnected = false;
                 }
                 else
                 {
-                    Debug.LogError("Invalid port number entered.");
+                    if (int.TryParse(port, out int PortNumber) && !string.IsNullOrEmpty(ipAddress))
+                    {
+                        Debug.Log($"Joining server at: {ipAddress}:{PortNumber}");
+                        Task.Run(async () =>
+                        {
+                            bool success = await _client.ConnectToServerAsync(ipAddress, PortNumber);
+                            if (success)
+                            {
+                                _isConnected = true;
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Debug.LogError("Invalid IP address or port number.");
+                    }
                 }
             }
         }

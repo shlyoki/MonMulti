@@ -1,10 +1,9 @@
-﻿using BepInEx;
-using UnityEngine;
-using System;
-using System.Net;
+﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 using Newtonsoft.Json;
 
 namespace MonMulti
@@ -13,65 +12,67 @@ namespace MonMulti
     {
         private TcpClient _tcpClient;
         private NetworkStream _networkStream;
-        public bool DeveloperMode = false;
+        private CancellationTokenSource _cancellationTokenSource;
+        private bool _isConnected = false;
 
-        public async Task ConnectToServerAsync(string ipAddress, int port)
+        public event Action<string> OnMessageReceived;
+
+        public async Task<bool> ConnectToServerAsync(string ip, int port)
         {
             try
             {
                 _tcpClient = new TcpClient();
-                await _tcpClient.ConnectAsync(ipAddress, port);
-
-                Debug.Log($"Connected to server at {ipAddress}:{port}");
-
+                await _tcpClient.ConnectAsync(ip, port);
                 _networkStream = _tcpClient.GetStream();
+                _isConnected = true;
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                Debug.Log("Connected to server!");
+
+                _ = ListenForMessagesAsync(_cancellationTokenSource.Token);
+                return true;
             }
             catch (Exception ex)
             {
-                if (DeveloperMode) { Debug.LogError($"Error: {ex.Message}"); }
+                Debug.LogError($"Connection error: {ex.Message}");
+                return false;
             }
         }
 
-        public async Task<string> SendJsonPacketAsync(string jsonMessage)
+        private async Task ListenForMessagesAsync(CancellationToken cancellationToken)
         {
-            if (_networkStream != null)
+            try
             {
-                try
+                byte[] buffer = new byte[1024];
+
+                while (_isConnected && !cancellationToken.IsCancellationRequested)
                 {
-                    byte[] messageBytes = Encoding.UTF8.GetBytes(jsonMessage);
-                    await _networkStream.WriteAsync(messageBytes, 0, messageBytes.Length);
+                    int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+                    if (bytesRead == 0) break;
 
-                    if (DeveloperMode) { Debug.Log($"Sent JSON: {jsonMessage}"); }
-
-                    byte[] buffer = new byte[1024];
-                    int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
-                    string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-
-                    if (DeveloperMode) { Debug.Log($"Received: {response}"); }
-
-                    return response;
-                }
-                catch (Exception ex)
-                {
-                    if (DeveloperMode) { Debug.LogError($"Error while sending/receiving JSON: {ex.Message}"); }
+                    string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    Debug.Log($"[RECEIVED] {message}");
+                    OnMessageReceived?.Invoke(message);
                 }
             }
-            return string.Empty;
+            catch (OperationCanceledException)
+            {
+                Debug.Log("Listening task canceled.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error while receiving JSON: {ex.Message}");
+            }
         }
 
         public void Disconnect()
         {
-            if (_networkStream != null)
-            {
-                _networkStream.Close();
-                _networkStream = null;
-            }
+            if (!_isConnected) return;
+            _isConnected = false;
 
-            if (_tcpClient != null)
-            {
-                _tcpClient.Close();
-                _tcpClient = null;
-            }
+            _cancellationTokenSource?.Cancel();
+            _networkStream?.Close();
+            _tcpClient?.Close();
 
             Debug.Log("Disconnected from server.");
         }

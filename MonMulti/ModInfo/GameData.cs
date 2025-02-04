@@ -17,5 +17,12 @@ namespace MonMulti
         public static int Minute { get; set; } = 0;
         public static int Hour { get; set; } = 0;
         public static int DayOfTheWeek { get; set; } = 0;
+
+        public static List<string> PlayerIDs { get; private set; } = new List<string>();
+
+        public static void UpdatePlayerList(List<string> players)
+        {
+            PlayerIDs = new List<string>(players);
+        }
     }
 }

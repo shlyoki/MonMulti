@@ -10,10 +10,18 @@ namespace MonMulti
         [HarmonyPostfix]
         public static void Postfix(Gameplay __instance)
         {
-            var player = __instance.Player;
-
-            GameData.Player = player;
+            GameData.Player = __instance.Player;
             GameData.IsGameInitialized = true;
+        }
+    }
+
+    [HarmonyPatch(typeof(Gameplay), "PauseGame")]
+    public static class PauseGamePatch
+    {
+        [HarmonyPrefix]
+        public static bool Prefix()
+        {
+            return false;
         }
     }
 
