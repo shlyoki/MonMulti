@@ -7,20 +7,20 @@
       "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\modinfo\\gamedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\modinfo\\gamedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\harmonypatches.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\harmonypatches.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\client\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\client\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\gui\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\gui\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\client\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\client\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\modinfo\\gamedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\modinfo\\gamedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\harmonypatches.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\harmonypatches.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\modinfo\\modinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "MonMulti\\Plugin.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Plugin.cs",
               "RelativeToolTip": "MonMulti\\Plugin.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAqwFYAAABFAAAAAAAAAA==",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAEsAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-22T20:41:55.716Z",
               "IsPinned": true,
@@ -52,13 +52,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "Client.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Client\\Client.cs",
               "RelativeDocumentMoniker": "MonMulti\\Client\\Client.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Client\\Client.cs",
               "RelativeToolTip": "MonMulti\\Client\\Client.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAADoAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T23:13:20.109Z",
               "IsPinned": true,
@@ -66,7 +66,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "HarmonyPatches.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\HarmonyPatches.cs",
               "RelativeDocumentMoniker": "MonMulti\\HarmonyPatches.cs",
@@ -93,13 +93,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "GUI.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\GUI\\GUI.cs",
               "RelativeDocumentMoniker": "MonMulti\\GUI\\GUI.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\GUI\\GUI.cs",
               "RelativeToolTip": "MonMulti\\GUI\\GUI.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAowEcAAABLAAAAAAAAAA==",
+              "ViewState": "AgIAAFUAAAAAAAAAAADwv2YAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-02T18:45:38.695Z",
               "IsPinned": true,
@@ -107,7 +107,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "GameData.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\ModInfo\\GameData.cs",
               "RelativeDocumentMoniker": "MonMulti\\ModInfo\\GameData.cs",

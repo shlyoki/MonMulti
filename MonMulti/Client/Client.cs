@@ -51,7 +51,6 @@ namespace MonMulti
                     if (bytesRead == 0) break;
 
                     string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                    Debug.Log($"[RECEIVED] {message}");
                     OnMessageReceived?.Invoke(message);
                 }
             }
@@ -64,6 +63,33 @@ namespace MonMulti
                 Debug.LogError($"Error while receiving JSON: {ex.Message}");
             }
         }
+        public async Task<string> SendJsonPacketAsync(string jsonMessage)
+        {
+            if (!_isConnected || _networkStream == null)
+            {
+                Debug.LogError("Cannot send message, not connected to the server.");
+                return string.Empty;
+            }
+
+            try
+            {
+                byte[] data = Encoding.ASCII.GetBytes(jsonMessage + "\n");
+                await _networkStream.WriteAsync(data, 0, data.Length);
+
+                byte[] buffer = new byte[1024];
+                int bytesRead = await _networkStream.ReadAsync(buffer, 0, buffer.Length);
+                string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error sending JSON: {ex.Message}");
+                return string.Empty;
+            }
+        }
+
+
 
         public void Disconnect()
         {
