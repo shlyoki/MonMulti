@@ -37,9 +37,7 @@ namespace MonMulti.Networking
                 if (DebugMode) { Console.WriteLine($"Received Client ID: {_clid}"); }
             }
 
-            byte[] data = Encoding.UTF8.GetBytes(message);
-            await stream.WriteAsync(data, 0, data.Length);
-            if (DebugMode) { Console.WriteLine("Message sent"); }
+            await SendMessageAsync(stream, message);
 
             await Task.Delay(-1);
         }
@@ -48,6 +46,7 @@ namespace MonMulti.Networking
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
             await stream.WriteAsync(data, 0, data.Length);
+            if (DebugMode) { Console.WriteLine($"Message sent: {message}"); }
         }
 
         private async Task ReceiveMessagesAsync(NetworkStream stream)

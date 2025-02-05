@@ -40,6 +40,14 @@ namespace MonMulti
 
         private void OnGUI()
         {
+            GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
+            titleStyle.alignment = TextAnchor.MiddleCenter;
+            titleStyle.fontSize = 20;
+            titleStyle.normal.textColor = Color.white;
+
+            float screenWidth = Screen.width;
+            GUI.Label(new Rect(screenWidth / 2 - 100, 10, 200, 30), "MonMulti by: antalervin19", titleStyle);
+
             if (_showGUI)
             {
                 windowRect = GUI.Window(0, windowRect, DrawGUIWindow, "MonMulti Menu");
