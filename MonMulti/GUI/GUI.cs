@@ -2,25 +2,23 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using Newtonsoft.Json;
+using MonMulti.Networking;
 
 namespace MonMulti
 {
     public class GUIManager : MonoBehaviour
     {
         private bool _showGUI = false;
-        private string ipAddress = "127.0.0.1";
-        private string port = "25565";
+        public string ipAddress = "127.0.0.1";
+        public string port = "25565";
 
-        private Client _client;
         private int _selectedTab = 0;
         private bool _isConnected = false;
+        private bool _isHosting = false;
+        private AsyncClient _client;
+        private AsyncServer _server;
 
         private Rect windowRect = new Rect(100, 100, 250, 250);
-
-        public void SetClient(Client client)
-        {
-            _client = client;
-        }
 
         private void Update()
         {
@@ -28,10 +26,28 @@ namespace MonMulti
             {
                 _showGUI = !_showGUI;
             }
+
+            if (_isConnected && _client != null)
+            {
+                _ = _client.ConnectAndSendAsync("Hello, server!");
+            }
+
+            if (_isHosting && _server != null)
+            {
+                _ = _server.StartAsync();
+            }
         }
 
         private void OnGUI()
         {
+            GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
+            titleStyle.alignment = TextAnchor.MiddleCenter;
+            titleStyle.fontSize = 20;
+            titleStyle.normal.textColor = Color.white;
+
+            float screenWidth = Screen.width;
+            GUI.Label(new Rect(screenWidth / 2 - 100, 10, 200, 30), "MonMulti by: antalervin19", titleStyle);
+
             if (_showGUI)
             {
                 windowRect = GUI.Window(0, windowRect, DrawGUIWindow, "MonMulti Menu");
@@ -76,7 +92,6 @@ namespace MonMulti
                 if (_isConnected)
                 {
                     Debug.Log("Disconnecting from server...");
-                    _client.Disconnect();
                     _isConnected = false;
                 }
                 else
@@ -84,14 +99,8 @@ namespace MonMulti
                     if (int.TryParse(port, out int PortNumber) && !string.IsNullOrEmpty(ipAddress))
                     {
                         Debug.Log($"Joining server at: {ipAddress}:{PortNumber}");
-                        Task.Run(async () =>
-                        {
-                            bool success = await _client.ConnectToServerAsync(ipAddress, PortNumber);
-                            if (success)
-                            {
-                                _isConnected = true;
-                            }
-                        });
+                        _client = new AsyncClient(ipAddress, PortNumber);
+                        _isConnected = true;
                     }
                     else
                     {
@@ -111,6 +120,8 @@ namespace MonMulti
                 if (int.TryParse(port, out int PortNumber))
                 {
                     Debug.Log($"Starting server at port: {PortNumber}");
+                    _server = new AsyncServer(PortNumber);
+                    _isHosting = true;
                 }
                 else
                 {

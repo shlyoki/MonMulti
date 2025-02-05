@@ -37,27 +37,4 @@ namespace MonMulti
             }
         }
     }
-
-    /*[HarmonyPatch(typeof(PlayerData))]
-    [HarmonyPatch(MethodType.Constructor)]
-    [HarmonyPatch(new Type[] {
-        typeof(int), typeof(House_Location), typeof(Scrapyard), typeof(SugarShack),
-        typeof(HomeGenerator), typeof(Store_TowingService), typeof(Store_Gilles),
-        typeof(Store_FederationSyrup), typeof(SugarShack_SlabBuild), typeof(SugarShack_TubingPost[]),
-        typeof(SugarShack_Tubing[]), typeof(Speedway), typeof(Store_PostOffice), typeof(Store_HydroSaintClin),
-        typeof(Home), typeof(ComputersData[])
-    })]
-    public static class PlayerDataPatch
-    {
-        [HarmonyPostfix]
-        public static void Postfix(PlayerData __instance)
-        {
-            GameData.Cash = __instance.intCash;
-            GameData.Minute = __instance.Minute;
-            GameData.Hour = __instance.Hour;
-            GameData.DayOfTheWeek = __instance.DayOfTheWeek;
-
-            Debug.Log($"[MonMulti] PlayerData captured! Cash: {GameData.Cash}, Time: {GameData.Hour}:{GameData.Minute}");
-        }
-    }*/
 }

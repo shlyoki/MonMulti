@@ -10,19 +10,12 @@ namespace MonMulti
 
         // Vehicles
         public static List<NWH.Vehicle> Vehicles { get; set; } = new List<NWH.Vehicle>();
-        public static GameObject KonigVehicle { get; set; }
+        public static GameObject Konig { get; set; }
 
         // Player Data
         public static int Cash { get; set; } = 0;
         public static int Minute { get; set; } = 0;
         public static int Hour { get; set; } = 0;
         public static int DayOfTheWeek { get; set; } = 0;
-
-        public static List<string> PlayerIDs { get; private set; } = new List<string>();
-
-        public static void UpdatePlayerList(List<string> players)
-        {
-            PlayerIDs = new List<string>(players);
-        }
     }
 }

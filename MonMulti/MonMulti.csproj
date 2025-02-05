@@ -2,6 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7EC0905A-537B-49AE-BFCE-DC32546874E4}</ProjectGuid>
@@ -64,13 +65,17 @@
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>..\Libraries\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\Libraries\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\Client.cs" />
+    <Compile Include="Networking\Client.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="ModInfo\GameData.cs" />
     <Compile Include="ModInfo\ModInfo.cs" />
+    <Compile Include="Networking\Server.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
