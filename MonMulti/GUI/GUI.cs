@@ -42,11 +42,11 @@ namespace MonMulti
         {
             GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
             titleStyle.alignment = TextAnchor.MiddleCenter;
-            titleStyle.fontSize = 15;
-            titleStyle.normal.textColor = Color.gray;
+            titleStyle.fontSize = 12;
+            titleStyle.normal.textColor = Color.white;
 
             float screenWidth = Screen.width;
-            GUI.Label(new Rect(screenWidth / 2 - 100, 5, 200, 30), "MonMulti by: antalervin19", titleStyle);
+            GUI.Label(new Rect(screenWidth / 2 - 100, 0, 200, 20), "MonMulti by: antalervin19", titleStyle);
 
             if (_showGUI)
             {
