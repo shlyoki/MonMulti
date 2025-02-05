@@ -25,7 +25,7 @@ namespace MonMulti
         }
     }
 
-    [HarmonyPatch(typeof(NWH.Vehicle), "Awake")]
+    /*[HarmonyPatch(typeof(NWH.Vehicle), "Awake")]
     public class VehicleAwakePatch
     {
         static void Postfix(NWH.Vehicle __instance)
@@ -36,5 +36,5 @@ namespace MonMulti
                 Debug.Log($"[MonMulti] Added vehicle '{__instance.gameObject.name}' to GameData. Total vehicles: {GameData.Vehicles.Count}");
             }
         }
-    }
+    }*/
 }
