@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\gui\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\gui\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|solutionrelative:monmulti\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7EC0905A-537B-49AE-BFCE-DC32546874E4}|MonMulti\\MonMulti.csproj|c:\\users\\antalervin19\\documents\\github\\monmulti\\monmulti\\networking\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,17 +34,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Plugin.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Plugin.cs",
               "RelativeDocumentMoniker": "MonMulti\\Plugin.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\Plugin.cs",
               "RelativeToolTip": "MonMulti\\Plugin.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAgwDsAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-22T20:41:55.716Z",
               "IsPinned": true,
@@ -65,13 +65,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "GUI.cs",
               "DocumentMoniker": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\GUI\\GUI.cs",
               "RelativeDocumentMoniker": "MonMulti\\GUI\\GUI.cs",
               "ToolTip": "C:\\Users\\antalervin19\\Documents\\GitHub\\MonMulti\\MonMulti\\GUI\\GUI.cs",
               "RelativeToolTip": "MonMulti\\GUI\\GUI.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAAQAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAQwC0AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-02T18:45:38.695Z",
               "IsPinned": true,
