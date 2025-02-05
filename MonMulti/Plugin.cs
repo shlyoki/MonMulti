@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MonMulti;
 using Newtonsoft.Json;
+using MonMulti.Networking;
 
 namespace MonMulti
 {
@@ -14,6 +15,10 @@ namespace MonMulti
     {
         private Harmony _harmony;
         private bool isInitialized = false;
+        private bool DebugMode = true;
+
+        private static AsyncServer _server;
+        private static AsyncClient _client;
 
         private void Awake()
         {
@@ -21,17 +26,17 @@ namespace MonMulti
             _harmony = new Harmony(ModInfo.pluginGuid);
             _harmony.PatchAll();
 
-            Debug.Log($"{ModInfo.pluginName} has been loaded!");
-
-
             // Initialize GUI
             GameObject guiObject = new GameObject("MonMulti_GUI");
             GUIManager guiManager = guiObject.AddComponent<GUIManager>();
             DontDestroyOnLoad(guiObject);
+
+            Debug.Log($"{ModInfo.pluginName} has been loaded!");
         }
 
         private void Update()
         {
+            //Check if user is in a game (Might be replaced)
             if (GameData.IsGameInitialized && GameData.Player != null)
             {
                 if (!isInitialized)
@@ -42,17 +47,9 @@ namespace MonMulti
             }
         }
 
-        private void FixedUpdate()
-        {
-            Vector3 playerPosition = GameData.Player.transform.position;
-            Quaternion playerRotation = GameData.Player.transform.rotation;
-
-            Vector3 konigPosition = GameData.Konig != null ? GameData.Konig.transform.position : Vector3.zero;
-            Quaternion konigRotation = GameData.Konig != null ? GameData.Konig.transform.rotation : Quaternion.identity;
-        }
-
         private void OnGameInitialization()
         {
+            //Grab Konig & OITruck from Vehicles
             foreach (var vehicle in GameData.Vehicles)
             {
                 if (vehicle.gameObject.name == "Konig")
@@ -60,7 +57,21 @@ namespace MonMulti
                     GameData.Konig = vehicle.gameObject;
                     break;
                 }
+                else if (vehicle.gameObject.name == "OITruck")
+                {
+                    GameData.OITruck = vehicle.gameObject;
+                    break;
+                }
             }
         }
+
+        /*
+         *   --NETWORKING-- 
+         * below is the functions
+         * that are used in the
+         * networking.
+        */
+
+        
     }
 }

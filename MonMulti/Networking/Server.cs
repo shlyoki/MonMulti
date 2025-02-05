@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace MonMulti.Networking
 {
@@ -15,27 +16,29 @@ namespace MonMulti.Networking
         private readonly int _port;
         private readonly List<TcpClient> _connectedClients = new List<TcpClient>();
         private int _clientCounter = 0;
+        private TcpListener _listener;
 
         public AsyncServer(int port)
         {
             _port = port;
         }
 
-        public async Task StartAsync()
+        public async Task StartServer()
         {
-            TcpListener listener = new TcpListener(IPAddress.Any, _port);
-            listener.Start();
-            if (DebugMode) { Console.WriteLine($"Server started on port {_port}"); }
+            _listener = new TcpListener(IPAddress.Any, _port);
+            _listener.Start();
+
+            if (DebugMode) { Debug.Log($"Server started on port {_port}"); }
 
             while (true)
             {
-                TcpClient client = await listener.AcceptTcpClientAsync();
+                TcpClient client = await _listener.AcceptTcpClientAsync();
                 _connectedClients.Add(client);
-                _ = HandleClientAsync(client);
+                _ = HandleClient(client);
             }
         }
 
-        private async Task HandleClientAsync(TcpClient client)
+        private async Task HandleClient(TcpClient client)
         {
             NetworkStream stream = client.GetStream();
             byte[] buffer = new byte[1024];
@@ -44,29 +47,37 @@ namespace MonMulti.Networking
             byte[] clidData = Encoding.UTF8.GetBytes(clidMessage);
             await stream.WriteAsync(clidData, 0, clidData.Length);
 
-            if (DebugMode) { Console.WriteLine($"Client {clid} connected."); }
+            if (DebugMode) { Debug.Log($"Client {clid} connected."); }
 
-            await SendDataPackToAllClients();
+            //Create player on server side
+            GameObject playerObject = new GameObject($"Player_{clid}");
+            GameData.Players.Add(playerObject);
+
+            await SendDataPack();
 
             int bytesRead;
             while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
                 string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                if (DebugMode) { Console.WriteLine($"Client {clid} says: {message}"); }
+                if (DebugMode) { Debug.Log($"Client {clid} says: {message}"); }
             }
 
-            if (DebugMode) { Console.WriteLine($"Client {clid} disconnected."); }
+            if (DebugMode) { Debug.Log($"Client {clid} disconnected."); }
             _connectedClients.Remove(client);
             client.Close();
 
-            await SendDataPackToAllClients();
+            //Remove player on server side
+            GameData.Players.Remove(playerObject);
+            UnityEngine.Object.Destroy(playerObject);
+
+            await SendDataPack();
         }
 
-        private async Task SendDataPackToAllClients()
+        private async Task SendDataPack()
         {
             string clientIds = string.Join(",", _connectedClients.Select(c => _connectedClients.IndexOf(c) + 1));
             int totalClients = _connectedClients.Count;
-            string dataPackMessage = $"DataPack: TotalClients:{totalClients}, ClientIDs:{clientIds}";
+            string dataPackMessage = $"DataPack: CL:{totalClients}, CLID:{clientIds}";
 
             byte[] dataPack = Encoding.UTF8.GetBytes(dataPackMessage);
 
@@ -79,11 +90,38 @@ namespace MonMulti.Networking
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error sending DataPack to client: {ex.Message}");
+                    Debug.LogError($"Error sending DataPack to client: {ex.Message}");
                 }
             }
 
-            if (DebugMode) { Console.WriteLine($"Sent DataPack to all clients."); }
+            if (DebugMode) { Debug.Log($"Sent DataPack to all clients."); }
+        }
+
+        public async Task StopServer()
+        {
+            string shutdownMessage = "ServerShuttingDown";
+            byte[] shutdownData = Encoding.UTF8.GetBytes(shutdownMessage);
+
+            foreach (var client in _connectedClients)
+            {
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    await stream.WriteAsync(shutdownData, 0, shutdownData.Length);
+                    client.Close();
+                }
+                catch (Exception ex)
+                {
+                    if (DebugMode) { Debug.LogError($"Error disconnecting client: {ex.Message}"); }
+                }
+            }
+
+            _connectedClients.Clear();
+            _clientCounter = 0;
+            _listener?.Stop();
+
+            if (DebugMode) { Debug.Log("Server stopped."); }
         }
     }
+
 }

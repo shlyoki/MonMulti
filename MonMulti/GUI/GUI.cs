@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using UnityEngine;
-using Newtonsoft.Json;
 using MonMulti.Networking;
 
 namespace MonMulti
@@ -9,12 +7,13 @@ namespace MonMulti
     public class GUIManager : MonoBehaviour
     {
         private bool _showGUI = false;
-        public string ipAddress = "127.0.0.1";
-        public string port = "25565";
+        public string IPAddress = "127.0.0.1";
+        public string Port = "25565";
 
         private int _selectedTab = 0;
         private bool _isConnected = false;
         private bool _isHosting = false;
+
         private AsyncClient _client;
         private AsyncServer _server;
 
@@ -25,16 +24,6 @@ namespace MonMulti
             if (Input.GetKeyDown(KeyCode.F7))
             {
                 _showGUI = !_showGUI;
-            }
-
-            if (_isConnected && _client != null)
-            {
-                _ = _client.ConnectAndSendAsync("Hello, server!");
-            }
-
-            if (_isHosting && _server != null)
-            {
-                _ = _server.StartAsync();
             }
         }
 
@@ -56,6 +45,15 @@ namespace MonMulti
 
         private void DrawGUIWindow(int windowID)
         {
+            if (_isConnected && _selectedTab != 0)
+            {
+                _selectedTab = 0;
+            }
+            else if (_isHosting && _selectedTab != 1)
+            {
+                _selectedTab = 1;
+            }
+
             if (GUI.Button(new Rect(10, 30, 100, 25), "Join"))
             {
                 _selectedTab = 0;
@@ -80,10 +78,10 @@ namespace MonMulti
         private void DrawJoinTab()
         {
             GUI.Label(new Rect(20, 70, 200, 20), "IP Address:");
-            ipAddress = GUI.TextField(new Rect(20, 90, 210, 20), ipAddress);
+            IPAddress = GUI.TextField(new Rect(20, 90, 210, 20), IPAddress);
 
             GUI.Label(new Rect(20, 120, 200, 20), "Port:");
-            port = GUI.TextField(new Rect(20, 140, 210, 20), port);
+            Port = GUI.TextField(new Rect(20, 140, 210, 20), Port);
 
             string buttonLabel = _isConnected ? "Disconnect" : "Join Game";
 
@@ -92,19 +90,21 @@ namespace MonMulti
                 if (_isConnected)
                 {
                     Debug.Log("Disconnecting from server...");
+                    _client.Disconnect();
                     _isConnected = false;
                 }
                 else
                 {
-                    if (int.TryParse(port, out int PortNumber) && !string.IsNullOrEmpty(ipAddress))
+                    if (int.TryParse(Port, out int PortNumber) && !string.IsNullOrEmpty(IPAddress))
                     {
-                        Debug.Log($"Joining server at: {ipAddress}:{PortNumber}");
-                        _client = new AsyncClient(ipAddress, PortNumber);
+                        Debug.Log($"Joining server at: {IPAddress}:{PortNumber}");
+                        _client = new AsyncClient(IPAddress, PortNumber);
+                        _ = _client.Connect();
                         _isConnected = true;
                     }
                     else
                     {
-                        Debug.LogError("Invalid IP address or port number.");
+                        Debug.LogError("Invalid IP address or Port number.");
                     }
                 }
             }
@@ -113,19 +113,31 @@ namespace MonMulti
         private void DrawHostTab()
         {
             GUI.Label(new Rect(20, 70, 200, 20), "Port:");
-            port = GUI.TextField(new Rect(20, 90, 210, 20), port);
+            Port = GUI.TextField(new Rect(20, 90, 210, 20), Port);
 
-            if (GUI.Button(new Rect(20, 120, 210, 30), "Host Game"))
+            string buttonLabel = _isHosting ? "Stop Hosting" : "Host Game";
+
+            if (GUI.Button(new Rect(20, 120, 210, 30), buttonLabel))
             {
-                if (int.TryParse(port, out int PortNumber))
+                if (_isHosting)
                 {
-                    Debug.Log($"Starting server at port: {PortNumber}");
-                    _server = new AsyncServer(PortNumber);
-                    _isHosting = true;
+                    Debug.Log("Stopping the server...");
+                    _server.StopServer();
+                    _isHosting = false;
                 }
                 else
                 {
-                    Debug.LogError("Invalid port number entered.");
+                    if (int.TryParse(Port, out int PortNumber))
+                    {
+                        Debug.Log($"Starting server at Port: {PortNumber}");
+                        _server = new AsyncServer(PortNumber);
+                        _ = _server.StartServer();
+                        _isHosting = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Invalid Port number entered.");
+                    }
                 }
             }
         }

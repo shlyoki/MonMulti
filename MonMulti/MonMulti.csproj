@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModInfo\SaveManager.cs" />
     <Compile Include="Networking\Client.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="HarmonyPatches.cs" />
