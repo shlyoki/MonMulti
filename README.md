@@ -6,6 +6,7 @@ Work-In-Progress multiplayer mod for the game Mon Bazou
 ### Completed:
 - ✅ **Joining and Hosting Games**: Implemented functionality for players to join and host games.
 - ✅ **UI**: UI for the mod menu, accessible via "F9". (Not "F7" now due to UnityInspector)
+- ✅ **TickSystem**: Sync all data using a TickSystem to not flood the user's games. (50TPS)
 - 🔄 **Getting Player Data**:
   - ✅ Position (Pos)
   - ✅ Rotation (Rot)
