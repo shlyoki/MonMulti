@@ -38,7 +38,10 @@ namespace MonMulti
         private string clientIP = "127.0.0.1";
 
         private string myPlayerId = Guid.NewGuid().ToString();
-        private string currentVehicle = null;
+        private VehicleNetworkSync vehicleSync;
+        private GameDataSync gameDataSync;
+        private MenuNetworkManager menuManager;
+        private VehicleSpawner vehicleSpawner;
 
         private const float PlayerHeight = 1.8f;
         private const float CapsuleYOffset = (PlayerHeight / 2f) - 0.45f;
@@ -52,13 +55,20 @@ namespace MonMulti
 
         private Dictionary<string, RemoteCube> remoteCubes = new Dictionary<string, RemoteCube>();
         private Dictionary<NetPeer, string> peerToId = new Dictionary<NetPeer, string>();
-        private HashSet<string> ownedVehicles = new HashSet<string>();
+        
+        private string currentVehicle = null;
+        private HashSet<string> ownedVehicles = new HashSet<string>(); // Fallback for old system
 
         private void Awake()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
             harmony = new Harmony(pluginGUID);
             harmony.PatchAll();
+            
+            // Initialize menu manager for MainMenu scene support
+            menuManager = new MenuNetworkManager();
+            menuManager.Initialize();
+            
             Logger.LogInfo("MonMulti loaded.");
         }
 
@@ -85,6 +95,41 @@ namespace MonMulti
             konigObject = GameObject.Find("Konig");
             olTruckObject = GameObject.Find("OlTruck");
             SmollATVObject = GameObject.Find("SmollATV");
+            
+            // Initialize network components when game objects are available
+            if (netManager != null)
+            {
+                InitializeNetworkComponents();
+            }
+        }
+        
+        private void InitializeNetworkComponents()
+        {
+            // Initialize vehicle sync
+            vehicleSync = new VehicleNetworkSync(netManager, isServer, myPlayerId);
+            vehicleSync.RegisterVehicle("KONIG", konigObject);
+            vehicleSync.RegisterVehicle("OLTRUCK", olTruckObject);
+            vehicleSync.RegisterVehicle("SMOLLATV", SmollATVObject);
+            
+            // Try to find Buggy vehicle as well
+            GameObject buggyObject = GameObject.Find("Buggy");
+            if (buggyObject != null)
+            {
+                vehicleSync.RegisterVehicle("BUGGY", buggyObject);
+            }
+            
+            // Initialize game data sync
+            gameDataSync = new GameDataSync(netManager, isServer, myPlayerId);
+            
+            // Initialize vehicle spawner
+            vehicleSpawner = new VehicleSpawner(netManager, isServer, myPlayerId);
+            vehicleSpawner.RegisterVehicle("KONIG", konigObject);
+            vehicleSpawner.RegisterVehicle("OLTRUCK", olTruckObject);
+            vehicleSpawner.RegisterVehicle("SMOLLATV", SmollATVObject);
+            if (buggyObject != null)
+            {
+                vehicleSpawner.RegisterVehicle("BUGGY", buggyObject);
+            }
         }
 
         private void FixedUpdate()
@@ -97,11 +142,25 @@ namespace MonMulti
                 tickTimer -= tickRate;
 
                 SendPlayerSync();
-                HandleVehicleEntry();
-
-                if (ShouldSendVehicle("KONIG")) SendVehicleSync("KONIG", konigObject);
-                if (ShouldSendVehicle("OLTRUCK")) SendVehicleSync("OLTRUCK", olTruckObject);
-                if (ShouldSendVehicle("SMOLLATV")) SendVehicleSync("SMOLLATV", SmollATVObject);
+                
+                // Use new vehicle sync system
+                if (vehicleSync != null)
+                {
+                    vehicleSync.HandleVehicleEntry(playerObject);
+                    
+                    if (vehicleSync.ShouldSyncVehicle("KONIG")) vehicleSync.SyncVehicle("KONIG");
+                    if (vehicleSync.ShouldSyncVehicle("OLTRUCK")) vehicleSync.SyncVehicle("OLTRUCK");
+                    if (vehicleSync.ShouldSyncVehicle("SMOLLATV")) vehicleSync.SyncVehicle("SMOLLATV");
+                    if (vehicleSync.ShouldSyncVehicle("BUGGY")) vehicleSync.SyncVehicle("BUGGY");
+                }
+                else
+                {
+                    // Fallback to old system if new components not initialized
+                    HandleVehicleEntry();
+                    if (ShouldSendVehicle("KONIG")) SendVehicleSync("KONIG", konigObject);
+                    if (ShouldSendVehicle("OLTRUCK")) SendVehicleSync("OLTRUCK", olTruckObject);
+                    if (ShouldSendVehicle("SMOLLATV")) SendVehicleSync("SMOLLATV", SmollATVObject);
+                }
             }
         }
 
@@ -138,6 +197,10 @@ namespace MonMulti
                 showMultiplayerMenu = !showMultiplayerMenu;
 
             netManager?.PollEvents();
+            
+            // Update new network components
+            gameDataSync?.Update();
+            menuManager?.Update();
 
             foreach (var pair in remoteCubes)
             {
@@ -251,8 +314,34 @@ namespace MonMulti
                             if (p != peer) p.Send(writer, DeliveryMethod.Unreliable);
                     }
                 }
+                else if (tag == "VEHICLE_SYNC")
+                {
+                    // Handle new vehicle sync messages
+                    vehicleSync?.HandleVehicleSync(reader, peer);
+                }
+                else if (tag == "VEHICLE_OWNERSHIP")
+                {
+                    // Handle vehicle ownership messages
+                    vehicleSync?.HandleVehicleOwnership(reader, peer);
+                }
+                else if (tag == "VEHICLE_SPAWN")
+                {
+                    // Handle vehicle spawn messages
+                    vehicleSpawner?.HandleVehicleSpawn(reader, peer);
+                }
+                else if (tag == "VEHICLE_DESPAWN")
+                {
+                    // Handle vehicle despawn messages
+                    vehicleSpawner?.HandleVehicleDespawn(reader, peer);
+                }
+                else if (tag == "GAME_DATA_SYNC")
+                {
+                    // Handle game data sync messages
+                    gameDataSync?.HandleGameDataSync(reader, peer);
+                }
                 else if (tag == "KONIG" || tag == "OLTRUCK" || tag == "SMOLLATV")
                 {
+                    // Legacy vehicle sync for backwards compatibility
                     Vector3 pos = new Vector3(reader.GetFloat(), reader.GetFloat(), reader.GetFloat());
                     Quaternion rot = new Quaternion(reader.GetFloat(), reader.GetFloat(), reader.GetFloat(), reader.GetFloat());
 
@@ -336,6 +425,12 @@ namespace MonMulti
                     isServer = true;
                     netManager.Start(PORT);
                     Logger.LogInfo($"Hosting on 0.0.0.0:{PORT}");
+                    
+                    // Initialize network components if we're in the game scene
+                    if (SceneManager.GetActiveScene().name == "Master" && playerObject != null)
+                    {
+                        InitializeNetworkComponents();
+                    }
                 }
 
                 if (GUILayout.Button("Connect"))
@@ -345,6 +440,12 @@ namespace MonMulti
                     netManager.Start();
                     netManager.Connect(clientIP, PORT, "SantaGoat");
                     Logger.LogInfo($"Connecting to {clientIP}:{PORT}");
+                    
+                    // Initialize network components if we're in the game scene
+                    if (SceneManager.GetActiveScene().name == "Master" && playerObject != null)
+                    {
+                        InitializeNetworkComponents();
+                    }
                 }
             }
             else
@@ -355,6 +456,12 @@ namespace MonMulti
                 {
                     netManager.Stop();
                     netManager = null;
+                    
+                    // Clean up network components
+                    vehicleSync = null;
+                    gameDataSync = null;
+                    vehicleSpawner = null;
+                    
                     foreach (var cube in remoteCubes.Values)
                         if (cube.Cube != null) Destroy(cube.Cube);
                     remoteCubes.Clear();

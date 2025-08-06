@@ -78,6 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MonMulti.cs" />
+    <Compile Include="VehicleNetworkSync.cs" />
+    <Compile Include="GameDataSync.cs" />
+    <Compile Include="MenuNetworkManager.cs" />
+    <Compile Include="VehicleSpawner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
