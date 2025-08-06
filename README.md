@@ -11,13 +11,13 @@ Work-In-Progress multiplayer mod for the game Mon Bazou
 - 🔄 **Getting Player Data**:
   - ✅ Position (Pos)
   - ✅ Rotation (Rot)
-  - ❌ Cash
-  - ❌ Time
+  - 🟡 Cash
+  - 🟡 Time
 - ✅ **Cars Synced:**:
   - ✅ Konig
   - ✅ OlTruck
-  - ❌ SmollATV
-  - ❌ Buggy
+  - 🟡 SmollATV
+  - 🟡 Buggy
 
 
 ### In Progress:
